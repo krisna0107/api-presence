@@ -16,7 +16,6 @@ class CreateDevicesTable extends Migration
         Schema::create('devices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('karyawan_id')->constrained('karyawans');
-            $table->foreignId('user_id')->constrained('users');
             $table->string('no_deivice')->nullable();
             $table->timestamps();
         });

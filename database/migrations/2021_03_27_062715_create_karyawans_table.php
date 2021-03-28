@@ -15,7 +15,9 @@ class CreateKaryawansTable extends Migration
     {
         Schema::create('karyawans', function (Blueprint $table) {
             $table->id();
+            $table->string('uid')->nullable();
             $table->string('nama');
+            $table->string('email')->nullable();
             $table->longText('alamat')->nullable();
             $table->string('no_hp')->nullable();
             $table->foreignId('jenis_id')->constrained('jenis');

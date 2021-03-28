@@ -19,7 +19,31 @@ class KaryawanController extends Controller
         $karyawan = Karyawan::with('jenis')->find($id);
         if (!$karyawan) {
             return response()->json([
-                'status' => 'K404',
+                'status' => 'K404-1',
+                'message' => 'Tidak Ditemukan',
+            ], 404);
+        }
+        return $karyawan;
+    }
+
+    public function getKarywanByUID($uid)
+    {
+        $karyawan = Karyawan::with('jenis')->where('uid', $uid)->fist();
+        if (!$karyawan) {
+            return response()->json([
+                'status' => 'K404-2',
+                'message' => 'Tidak Ditemukan',
+            ], 404);
+        }
+        return $karyawan;
+    }
+
+    public function getKarywanByEmail($email)
+    {
+        $karyawan = Karyawan::with('jenis')->where('email', $email)->fist();
+        if (!$karyawan) {
+            return response()->json([
+                'status' => 'K404-3',
                 'message' => 'Tidak Ditemukan',
             ], 404);
         }
