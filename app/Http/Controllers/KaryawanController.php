@@ -4,9 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Karyawan;
+use Kreait\Firebase\Auth;
+use Firebase\Auth\Token\Exception\InvalidToken;
 
 class KaryawanController extends Controller
 {
+    private $auth;
+
+    public function __construct(Auth $auth)
+    {
+        $this->auth = $auth;
+    }
+
     //
     public function index($limit)
     {
