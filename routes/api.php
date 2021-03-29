@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::group(['prefix' => 'v1', 'middleware' => 'authfirebase'], function(){
+Route::middleware('authfirebase')->group(function () {
     Route::prefix('karyawans')->group(function () {
         Route::get('/{id}', 'App\Http\Controllers\KaryawanController@getKarywanById');
         Route::get('/uid/{uid}', 'App\Http\Controllers\KaryawanController@getKarywanByUID');
