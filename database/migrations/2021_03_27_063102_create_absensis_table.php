@@ -15,7 +15,6 @@ class CreateAbsensisTable extends Migration
     {
         Schema::create('absensis', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users');
             $table->foreignId('qrcode_id')->constrained('q_r_codes');
             $table->foreignId('device_id')->constrained('devices');
             $table->dateTime('jam_masuk', $precision = 0);
