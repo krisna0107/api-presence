@@ -20,7 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::middleware('authfirebase')->group(function () {
     Route::prefix('karyawans')->group(function () {
         Route::get('/{id}', 'App\Http\Controllers\KaryawanController@getKarywanById');
-        Route::get('/uid/{uid}', 'App\Http\Controllers\KaryawanController@getKarywanByUID');
+        Route::get('/users/{users}', 'App\Http\Controllers\KaryawanController@getKarywanByUsers');
         Route::get('/email/{email}', 'App\Http\Controllers\KaryawanController@getKarywanByEmail');
         Route::get('/paginate/{limit}', 'App\Http\Controllers\KaryawanController@index');
     });

@@ -9,7 +9,7 @@ use Firebase\Auth\Token\Exception\InvalidToken;
 
 class AuthFirebase
 {
-    private $auth;
+    private $auth, $users;
 
     public function __construct(Auth $auth)
     {
@@ -49,6 +49,9 @@ class AuthFirebase
     {
         try {
             $verifiedIdToken = $this->auth->verifyIdToken($token);
+            // $uid = $verifiedIdToken->claims()->get('sub');
+            // $user = $this->auth->getUser($uid);
+            // $this->setUsersData($user);
         } catch (InvalidToken $e) {
             return response()->json([
                 "error" => "AUTH01",
@@ -61,5 +64,15 @@ class AuthFirebase
             ], 400);
         }
         return true;
+    }
+
+    public static function setUsersData($users)
+    {
+        $this->users = $users;
+    }
+
+    public static function getUsersData()
+    {
+        return $this->users;
     }
 }

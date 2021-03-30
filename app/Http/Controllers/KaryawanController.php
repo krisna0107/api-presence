@@ -4,18 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Karyawan;
-use Kreait\Firebase\Auth;
-use Firebase\Auth\Token\Exception\InvalidToken;
 
 class KaryawanController extends Controller
 {
-    private $auth;
-
-    public function __construct(Auth $auth)
-    {
-        $this->auth = $auth;
-    }
-
     //
     public function index($limit)
     {
@@ -35,21 +26,26 @@ class KaryawanController extends Controller
         return $karyawan;
     }
 
-    public function getKarywanByUID($uid)
+    public function getKarywanByUsers($users)
     {
-        $karyawan = Karyawan::with('jenis')->where('uid', $uid)->fist();
-        if (!$karyawan) {
-            return response()->json([
-                'status' => 'K404-2',
-                'message' => 'Tidak Ditemukan',
-            ], 404);
+        $uid = Karyawan::with('jenis')->where('uid', $users)->first();
+        if (!$uid) {
+            $getUsers = new AuthFirebase;
+            $email = Karyawan::with('jenis')->where('email', $users)->first();
+            if (!$email) {
+                return response()->json([
+                    'status' => 'K404-2',
+                    'message' => 'Tidak Ditemukan',
+                ], 404);
+            }
+            return $getUsers->getUsersData();
         }
-        return $karyawan;
+        return $uid;
     }
 
     public function getKarywanByEmail($email)
     {
-        $karyawan = Karyawan::with('jenis')->where('email', $email)->fist();
+        $karyawan = Karyawan::with('jenis')->where('email', $email)->first();
         if (!$karyawan) {
             return response()->json([
                 'status' => 'K404-3',
