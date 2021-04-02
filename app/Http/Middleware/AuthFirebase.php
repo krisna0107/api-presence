@@ -49,9 +49,6 @@ class AuthFirebase
     {
         try {
             $verifiedIdToken = $this->auth->verifyIdToken($token);
-            // $uid = $verifiedIdToken->claims()->get('sub');
-            // $user = $this->auth->getUser($uid);
-            // $this->setUsersData($user);
         } catch (InvalidToken $e) {
             return response()->json([
                 "error" => "AUTH01",

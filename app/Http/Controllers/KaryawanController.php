@@ -30,7 +30,7 @@ class KaryawanController extends Controller
     {
         $uid = Karyawan::with('jenis')->where('uid', $users)->first();
         if (!$uid) {
-            $getUsers = new AuthFirebase;
+            // $getUsers = new AuthFirebase;
             $email = Karyawan::with('jenis')->where('email', $users)->first();
             if (!$email) {
                 return response()->json([
@@ -38,7 +38,8 @@ class KaryawanController extends Controller
                     'message' => 'Tidak Ditemukan',
                 ], 404);
             }
-            return $getUsers->getUsersData();
+            // return $getUsers->getUsersData();
+            return $email;
         }
         return $uid;
     }
