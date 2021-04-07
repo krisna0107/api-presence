@@ -25,3 +25,7 @@ Route::middleware('authfirebase')->group(function () {
         Route::get('/paginate/{limit}', 'App\Http\Controllers\KaryawanController@index');
     });
 });
+
+Route::prefix('qrcode')->group(function () {
+    Route::get('', 'App\Http\Controllers\QRCodeController@GenerateQR');
+});
