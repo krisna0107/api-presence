@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use SimpleSoftwareIO\QrCode\Generator;
+use App\Http\Controllers\QRCodeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,7 +17,7 @@ use SimpleSoftwareIO\QrCode\Generator;
 
 Route::get('/', function () {
     $qrcode = new Generator;
-    $qr = $qrcode->size(500)->generate('Make a qrcode without Laravel!');
+    $qr = $qrcode->size(500)->generate(QRCodeController::GenerateQR());
 
     return view('welcome', [
         'qr' => $qr
