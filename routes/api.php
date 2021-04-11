@@ -20,14 +20,15 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::middleware('authfirebase')->group(function () {
     Route::prefix('karyawans')->group(function () {
         Route::get('/{id}', 'App\Http\Controllers\KaryawanController@getKarywanById');
+        Route::get('/barcode/{uid}', 'App\Http\Controllers\KaryawanController@getBarcode');
         Route::get('/users/{users}', 'App\Http\Controllers\KaryawanController@getKarywanByUsers');
         Route::get('/email/{email}', 'App\Http\Controllers\KaryawanController@getKarywanByEmail');
         Route::get('/paginate/{limit}', 'App\Http\Controllers\KaryawanController@index');
     });
+});
 
-    Route::prefix('absensis')->group(function () {
-        Route::post('', 'App\Http\Controllers\AbsensiController@absenMasuk');
-    });
+Route::prefix('absensis')->group(function () {
+    Route::post('', 'App\Http\Controllers\AbsensiController@absenMasuk');
 });
 
 Route::prefix('qrcode')->group(function () {
