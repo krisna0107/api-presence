@@ -18,7 +18,7 @@ class CreateAbsensisTable extends Migration
             $table->foreignId('qrcode_id')->constrained('q_r_codes');
             $table->foreignId('device_id')->constrained('devices');
             $table->dateTime('jam_masuk', $precision = 0);
-            $table->dateTime('jam_keluar', $precision = 0);
+            $table->dateTime('jam_keluar', $precision = 0)->nullable();
             $table->timestamps();
         });
     }

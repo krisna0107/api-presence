@@ -28,10 +28,10 @@ class KaryawanController extends Controller
 
     public function getKarywanByUsers($users)
     {
-        $uid = Karyawan::with('jenis')->where('uid', $users)->first();
+        $uid = Karyawan::with('jenis')->with('devices')->where('uid', $users)->first();
         if (!$uid) {
             // $getUsers = new AuthFirebase;
-            $email = Karyawan::with('jenis')->where('email', $users)->first();
+            $email = Karyawan::with('jenis')->with('devices')->where('email', $users)->first();
             if (!$email) {
                 return response()->json([
                     'status' => 'K404-2',
@@ -55,4 +55,5 @@ class KaryawanController extends Controller
         }
         return $karyawan;
     }
+
 }

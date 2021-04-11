@@ -12,4 +12,9 @@ class Karyawan extends Model
     {
         return $this->belongsTo(Jenis::class, 'jenis_id', 'id');
     }
+    
+    public function devices()
+    {
+        return $this->hasMany(Device::class, 'karyawan_id', 'id');
+    }
 }
