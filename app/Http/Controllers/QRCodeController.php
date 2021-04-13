@@ -7,10 +7,9 @@ use App\Models\QRCode;
 
 class QRCodeController extends Controller
 {
-    protected $ssid, $qr, $date;
-    public function __construct($ssid, $qr, $date) {
+    protected $ssid, $date;
+    public function __construct($ssid, $date) {
         $this->ssid = $ssid;
-        $this->qr = $qr;
         $this->date = $date;
     }
     //
@@ -21,9 +20,9 @@ class QRCodeController extends Controller
 
     public function verifyQR()
     {
-        $qrcode = QRCode::find($this->qr);
-        if ($qrcode->ssid == $this->ssid && $qrcode->tanggal == $this->date) {
-            return true;
+        $qrcode = QRCode::where('ssid', $this->ssid)->whereDate('tanggal', $this->date)->first();
+        if ($qrcode) {
+            return $qrcode->id;
         }
         return false;
     }
