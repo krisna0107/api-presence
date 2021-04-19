@@ -28,9 +28,9 @@ Route::middleware('authfirebase')->group(function () {
 });
 
 Route::prefix('absensis')->group(function () {
-    Route::post('', 'App\Http\Controllers\AbsensiController@absenMasuk');
+    Route::get('/user/{user_id}/device/{imei}/id/{ssid}/kode/{opsi}', 'App\Http\Controllers\AbsensiController@absenMasukKeluar');
 });
-
+// $user_id, $imei, $ssid, $opsi
 Route::prefix('qrcode')->group(function () {
     Route::get('', 'App\Http\Controllers\QRCodeController@GenerateQR');
 });

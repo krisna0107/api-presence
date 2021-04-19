@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\QRCode;
+use Carbon\Carbon;
 
 class QRCodeController extends Controller
 {
@@ -15,7 +16,7 @@ class QRCodeController extends Controller
     //
     public static function GenerateQR()
     {
-        return QRCode::first();
+        return QRCode::where('tanggal', Carbon::now()->isoFormat('Y-MM-D'))->first();
     }
 
     public function verifyQR()
