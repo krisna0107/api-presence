@@ -44,12 +44,6 @@ class KaryawanController extends Controller
         return $uid;
     }
 
-    public function getBarcode($uid)
-    {
-        $uid = Karyawan::where('uid', $uid)->first();
-        return 'amigo-'.$uid->uid.'-'.$uid->id;
-    }
-
     public function getKarywanByEmail($email)
     {
         $karyawan = Karyawan::with('jenis')->where('email', $email)->first();
