@@ -8,7 +8,7 @@ use App\Models\Device;
 class DeviceController extends Controller
 {
     protected $imei, $user_id;
-    public function __construct($user_id, $imei) {
+    public function __construct($user_id = null, $imei = null) {
         $this->user_id = $user_id;
         $this->imei = $imei;
     }
@@ -20,5 +20,17 @@ class DeviceController extends Controller
             return $device->id;
         }
         return false;
+    }
+
+    public function getDeviceByImei($karyawan, $imei)
+    {
+        $device = Device::where('karyawan_id', $karyawan)->where('no_device', $imei)->first();
+        if (!$device) {
+            return response()->json([
+                'status' => 'D404-1',
+                'message' => 'Tidak Ditemukan',
+            ], 404);
+        }
+        return $device;
     }
 }

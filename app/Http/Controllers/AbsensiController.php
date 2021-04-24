@@ -11,6 +11,34 @@ use Carbon\Carbon;
 class AbsensiController extends Controller
 {
 
+    public function getNowAbsensi($user_id, $imei)
+    {
+        $getDevice = new DeviceController;
+        $getDeviceByImei = $getDevice->getDeviceByImei($user_id, $imei);
+        $absen = Absensi::where('device_id', $getDeviceByImei->id)->whereDate('jam_masuk', Carbon::now()->isoFormat('Y-MM-D'))->first();
+        if (!$absen) {
+            return response()->json([
+                'status' => 'A404-3',
+                'message' => 'Tidak ditemukan',
+            ], 404);
+        }
+        return $absen;
+    }
+
+    public function getAllAbsensi($user_id, $imei, $limit)
+    {
+        $getDevice = new DeviceController;
+        $getDeviceByImei = $getDevice->getDeviceByImei($user_id, $imei);
+        $absen = Absensi::where('device_id', $getDeviceByImei->id)->orderByDesc('jam_masuk')->paginate($limit);
+        if (!$absen) {
+            return response()->json([
+                'status' => 'A404-3',
+                'message' => 'Tidak ditemukan',
+            ], 404);
+        }
+        return $absen;
+    }
+    
     public function absenMasukKeluar($user_id, $imei, $ssid, $opsi)
     {
         if ($opsi == 'masuk') {
