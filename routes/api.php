@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-// Route::middleware('authfirebase')->group(function () {
+Route::middleware('authfirebase')->group(function () {
     Route::prefix('karyawans')->group(function () {
         Route::get('/{id}', 'App\Http\Controllers\KaryawanController@getKarywanById');
         Route::get('/users/{users}', 'App\Http\Controllers\KaryawanController@getKarywanByUsers');
@@ -33,7 +33,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
         Route::get('/user/{user_id}/device/{imei}', 'App\Http\Controllers\AbsensiController@getNowAbsensi');
         Route::get('/user/{user_id}/device/{imei}/limit/{limit}', 'App\Http\Controllers\AbsensiController@getAllAbsensi');
     });
-// });
+});
 
 Route::prefix('absensis')->group(function () {
     Route::post('/user/{user_id}/device/{imei}/id/{ssid}/kode/{opsi}', 'App\Http\Controllers\AbsensiController@absenMasukKeluar');
