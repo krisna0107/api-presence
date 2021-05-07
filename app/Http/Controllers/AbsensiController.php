@@ -11,11 +11,22 @@ use Carbon\Carbon;
 class AbsensiController extends Controller
 {
 
+    public static function getKaryawanAbsensi($user_id, $imei)
+    {
+        $getDevice = new DeviceController($user_id, $imei);
+        $getDeviceByImei = $getDevice->verifyDevice();
+        $absen = Absensi::where('device_id', $getDeviceByImei)->whereDate('jam_masuk', Carbon::now()->isoFormat('Y-MM-D'))->first();
+        if (!$absen) {
+            return false;
+        }
+        return true;
+    }
+
     public function getNowAbsensi($user_id, $imei)
     {
-        $getDevice = new DeviceController;
-        $getDeviceByImei = $getDevice->getDeviceByImei($user_id, $imei);
-        $absen = Absensi::where('device_id', $getDeviceByImei->id)->whereDate('jam_masuk', Carbon::now()->isoFormat('Y-MM-D'))->first();
+        $getDevice = new DeviceController($user_id, $imei);
+        $getDeviceByImei = $getDevice->verifyDevice();
+        $absen = Absensi::where('device_id', $getDeviceByImei)->whereDate('jam_masuk', Carbon::now()->isoFormat('Y-MM-D'))->first();
         if (!$absen) {
             return response()->json([
                 'status' => 'A404-3',
@@ -27,9 +38,9 @@ class AbsensiController extends Controller
 
     public function getAllAbsensi($user_id, $imei, $limit)
     {
-        $getDevice = new DeviceController;
-        $getDeviceByImei = $getDevice->getDeviceByImei($user_id, $imei);
-        $absen = Absensi::where('device_id', $getDeviceByImei->id)->orderByDesc('jam_masuk')->paginate($limit);
+        $getDevice = new DeviceController($user_id, $imei);
+        $getDeviceByImei = $getDevice->verifyDevice();
+        $absen = Absensi::where('device_id', $getDeviceByImei)->orderByDesc('jam_masuk')->paginate($limit);
         if (!$absen) {
             return response()->json([
                 'status' => 'A404-3',
@@ -41,48 +52,53 @@ class AbsensiController extends Controller
     
     public function absenMasukKeluar($user_id, $imei, $ssid, $opsi)
     {
+        $getDevice = new DeviceController($user_id, $imei);
+        if (!$getDevice->verifyDevice()) {
+            return response()->json([
+                'status' => 'A404-2',
+                'message' => 'Device tidak terdaftar',
+            ], 404);
+        }
+        $qrcode = new QRCodeController($ssid, Carbon::now()->isoFormat('Y-MM-D'));
+        if (!$qrcode->verifyQR()) {
+            return response()->json([
+                'status' => 'A404-1',
+                'message' => 'Gagal absen! '.Carbon::now()->isoFormat('Y-MM-D'),
+            ], 404);
+        }
         if ($opsi == 'masuk') {
             $absen = new Absensi;
-            $getDevice = new DeviceController($user_id, $imei);
-            if (!$getDevice->verifyDevice()) {
+            $getAbsen = $this->getKaryawanAbsensi($user_id, $imei);
+            if ($getAbsen) {
                 return response()->json([
-                    'status' => 'A404-2',
-                    'message' => 'Device tidak terdaftar',
-                ], 404);
+                    'status' => 'A404-4',
+                    'message' => 'Telah melakukan absen masuk hari ini',
+                ], 409);
             }
             $absen->device_id = $getDevice->verifyDevice();
             $absen->jam_masuk = Carbon::now();
-
-            $qrcode = new QRCodeController($ssid, Carbon::now()->isoFormat('Y-MM-D'));
-            if (!$qrcode->verifyQR()) {
-                return response()->json([
-                    'status' => 'A404-1',
-                    'message' => 'Gagal absen!'.Carbon::now()->isoFormat('Y-MM-D'),
-                ], 404);
-            }
             $absen->qrcode_id = $qrcode->verifyQR();
             $absen->save();
             return $absen;
-        }else {
-            $getDevice = new DeviceController($user_id, $imei);
-            if (!$getDevice->verifyDevice()) {
-                return response()->json([
-                    'status' => 'A404-2',
-                    'message' => 'Device tidak terdaftar',
-                ], 404);
-            }
-
-            $qrcode = new QRCodeController($ssid, Carbon::now()->isoFormat('Y-MM-D'));
-            if (!$qrcode->verifyQR()) {
+        } else {
+            $deviceAbsen = Absensi::where('device_id', $getDevice->verifyDevice());
+            $absenKeluar = $deviceAbsen->where('qrcode_id', $qrcode->verifyQR())->whereDate('jam_masuk', Carbon::now()->isoFormat('Y-MM-D'))->first();
+            if (!$absenKeluar) {
                 return response()->json([
                     'status' => 'A404-1',
-                    'message' => 'Gagal absen!'.Carbon::now()->isoFormat('Y-MM-D'),
+                    'message' => 'Gagal absen! '.Carbon::now()->isoFormat('Y-MM-D'),
                 ], 404);
             }
-            $absen = Absensi::where('device_id', $getDevice->verifyDevice())->where('qrcode_id', $qrcode->verifyQR())->first();
-            $absen->jam_keluar = Carbon::now();
-            $absen->save();
-            return $absen;
+            $getAbsen = $deviceAbsen->whereDate('jam_keluar', Carbon::now()->isoFormat('Y-MM-D'))->first();
+            if ($getAbsen) {
+                return response()->json([
+                    'status' => 'A404-4',
+                    'message' => 'Telah melakukan absen keluar hari ini',
+                ], 409);
+            }
+            $absenKeluar->jam_keluar = Carbon::now();
+            $absenKeluar->save();
+            return $absenKeluar;
         }
     }
 }
