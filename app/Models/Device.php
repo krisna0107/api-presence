@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Device extends Model
 {
     use HasFactory;
+
+    public function karyawan()
+    {
+        return $this->hasOne(Karyawan::class, 'id', 'karyawan_id');
+    }
 }

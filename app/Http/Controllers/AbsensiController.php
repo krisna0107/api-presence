@@ -22,10 +22,10 @@ class AbsensiController extends Controller
         return true;
     }
 
-    public function getNowAbsensi($user_id, $imei)
+    public function getNowAbsensi(Request $request, $user_id, $imei)
     {
         $getDevice = new DeviceController($user_id, $imei);
-        $getDeviceByImei = $getDevice->verifyDevice();
+        $getDeviceByImei = $getDevice->verifyDevice($request->bearerToken());
         $absen = Absensi::where('device_id', $getDeviceByImei)->whereDate('jam_masuk', Carbon::now()->isoFormat('Y-MM-D'))->first();
         if (!$absen) {
             return response()->json([
@@ -36,10 +36,10 @@ class AbsensiController extends Controller
         return $absen;
     }
 
-    public function getAllAbsensi($user_id, $imei, $limit)
+    public function getAllAbsensi(Request $request, $user_id, $imei, $limit)
     {
         $getDevice = new DeviceController($user_id, $imei);
-        $getDeviceByImei = $getDevice->verifyDevice();
+        $getDeviceByImei = $getDevice->verifyDevice($request->bearerToken());
         $absen = Absensi::where('device_id', $getDeviceByImei)->orderByDesc('jam_masuk')->paginate($limit);
         if (!$absen) {
             return response()->json([

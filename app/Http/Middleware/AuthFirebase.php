@@ -9,7 +9,7 @@ use Firebase\Auth\Token\Exception\InvalidToken;
 
 class AuthFirebase
 {
-    private $auth, $users;
+    private $auth;
 
     public function __construct(Auth $auth)
     {
@@ -61,15 +61,5 @@ class AuthFirebase
             ], 400);
         }
         return true;
-    }
-
-    public static function setUsersData($users)
-    {
-        $this->users = $users;
-    }
-
-    public static function getUsersData()
-    {
-        return $this->users;
     }
 }
