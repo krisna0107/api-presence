@@ -16,10 +16,14 @@ use App\Http\Controllers\QRCodeController;
 */
 
 Route::get('/', function () {
-    $qrcode = new Generator;
-    $qr = $qrcode->size(500)->generate(QRCodeController::GenerateQR());
+    // $qrcode = new Generator;
+    // $qr = $qrcode->size(500)->generate(QRCodeController::GenerateQR());
 
-    return view('welcome', [
-        'qr' => $qr
-    ]);
+    // return view('welcome', [
+    //     'qr' => $qr
+    // ]);
+    return response()->json([
+        'status' => '404',
+        'message' => 'Not Found',
+    ], 404);
 });
