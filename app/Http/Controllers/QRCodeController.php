@@ -21,7 +21,7 @@ class QRCodeController extends Controller
 
     public function verifyQR()
     {
-        $qrcode = QRCode::where('ssid', $this->ssid)->whereDate('tanggal', '>=' , $this->date)->first();
+        $qrcode = QRCode::where('ssid', $this->ssid)->where('tanggal', '>=' , $this->date)->first();
         if ($qrcode) {
             return $qrcode->id;
         }
