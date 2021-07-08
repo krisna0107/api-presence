@@ -59,11 +59,11 @@ class AbsensiController extends Controller
                 'message' => 'Device tidak terdaftar',
             ], 404);
         }
-        $qrcode = new QRCodeController($ssid, date('Y-m-d H:i:s'));
+        $qrcode = new QRCodeController($ssid, Carbon::now()->isoFormat('Y-MM-D'));
         if (!$qrcode->verifyQR()) {
             return response()->json([
                 'status' => 'A404-1',
-                'message' => 'Gagal absen! '.date('Y-m-d H:i:s'),
+                'message' => 'Gagal absen! '.Carbon::now()->isoFormat('Y-MM-D'),
             ], 404);
         }
         if ($opsi == 'masuk') {
