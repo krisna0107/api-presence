@@ -36,7 +36,7 @@ Route::middleware('authfirebase')->group(function () {
 });
 
 Route::prefix('absensis')->group(function () {
-    Route::post('/user/{user_id}/device/{imei}/id/{ssid}/kode/{opsi}', 'App\Http\Controllers\AbsensiController@absenMasukKeluar');
+    Route::post('/user/{user_id}/device/{imei}/id/{ssid}/kode/{opsi}/waktu/{time}', 'App\Http\Controllers\AbsensiController@absenMasukKeluar');
 });
 
 // $user_id, $imei, $ssid, $opsi

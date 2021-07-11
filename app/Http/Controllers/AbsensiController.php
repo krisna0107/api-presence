@@ -50,7 +50,7 @@ class AbsensiController extends Controller
         return $absen;
     }
     
-    public function absenMasukKeluar($user_id, $imei, $ssid, $opsi)
+    public function absenMasukKeluar($user_id, $imei, $ssid, $opsi, $time)
     {
         $getDevice = new DeviceController($user_id, $imei);
         if (!$getDevice->verifyDevice()) {
@@ -67,6 +67,14 @@ class AbsensiController extends Controller
             ], 404);
         }
         if ($opsi == 'masuk') {
+            $cek = strtotime($time);
+            $add = $cek+(60*5);
+            if (date('Y-m-d H:i:s') >= date('Y-m-d H:i:s', $add)) {
+                return response()->json([
+                    'status' => 'A401-5',
+                    'message' => 'QRCode Kadaluarsa',
+                ], 401);
+            }
             $absen = new Absensi;
             $getAbsen = $this->getKaryawanAbsensi($user_id, $imei);
             if ($getAbsen) {
