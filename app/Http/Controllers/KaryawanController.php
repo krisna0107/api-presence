@@ -37,9 +37,9 @@ class KaryawanController extends Controller
     public function getKarywanByUsers(Request $request, $users)
     {
         $validasi = new ValidasiController($request->bearerToken());
-        $uid = Karyawan::with('jenis')->with('devices')->where('uid', $users)->first();
+        $uid = Karyawan::with('devices')->where('uid', $users)->first();
         if (!$uid) {
-            $email = Karyawan::with('jenis')->with('devices')->where('email', $users)->first();
+            $email = Karyawan::with('devices')->where('email', $users)->first();
             if (!$email) {
                 return response()->json([
                     'status' => 'K404-2',

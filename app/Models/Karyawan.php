@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Karyawan extends Model
 {
     use HasFactory;
+    protected $hidden = array('alamat', 'no_hp', 'jenis_id', 'admin_create');
     public function jenis()
     {
         return $this->belongsTo(Jenis::class, 'jenis_id', 'id');
