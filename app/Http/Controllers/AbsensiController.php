@@ -44,7 +44,7 @@ class AbsensiController extends Controller
         if (!$absen) {
             return response()->json([
                 'status' => 'A404-3',
-                'message' => 'Tidak ditemukan',
+                'message' => 'Not Found',
             ], 404);
         }
         return $absen;
@@ -56,14 +56,14 @@ class AbsensiController extends Controller
         if (!$getDevice->verifyDevice()) {
             return response()->json([
                 'status' => 'A404-2',
-                'message' => 'Device tidak terdaftar',
+                'message' => 'Device Not Found',
             ], 404);
         }
         $qrcode = new QRCodeController($ssid, Carbon::now()->isoFormat('Y-MM-D'));
         if (!$qrcode->verifyQR()) {
             return response()->json([
                 'status' => 'A404-1',
-                'message' => 'Gagal absen! '.Carbon::now()->isoFormat('Y-MM-D'),
+                'message' => 'Failed! '.Carbon::now()->isoFormat('Y-MM-D'),
             ], 404);
         }
         if ($opsi == 'masuk') {
@@ -72,7 +72,7 @@ class AbsensiController extends Controller
             if (date('Y-m-d H:i:s') >= date('Y-m-d H:i:s', $add)) {
                 return response()->json([
                     'status' => 'A401-5',
-                    'message' => 'QRCode Kadaluarsa',
+                    'message' => 'QRCode expired',
                 ], 401);
             }
             $absen = new Absensi;
@@ -80,7 +80,7 @@ class AbsensiController extends Controller
             if ($getAbsen) {
                 return response()->json([
                     'status' => 'A404-4',
-                    'message' => 'Telah melakukan absen masuk hari ini',
+                    'message' => 'Duplicate Entry',
                 ], 409);
             }
             $absen->device_id = $getDevice->verifyDevice();
@@ -94,14 +94,14 @@ class AbsensiController extends Controller
             if (!$absenKeluar) {
                 return response()->json([
                     'status' => 'A404-1',
-                    'message' => 'Gagal absen! '.Carbon::now()->isoFormat('Y-MM-D'),
+                    'message' => 'Failed! '.Carbon::now()->isoFormat('Y-MM-D'),
                 ], 404);
             }
             $getAbsen = $deviceAbsen->whereDate('jam_keluar', Carbon::now()->isoFormat('Y-MM-D'))->first();
             if ($getAbsen) {
                 return response()->json([
                     'status' => 'A404-4',
-                    'message' => 'Telah melakukan absen keluar hari ini',
+                    'message' => 'Duplicate Entry',
                 ], 409);
             }
             $absenKeluar->jam_keluar = Carbon::now();
