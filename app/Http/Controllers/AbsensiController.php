@@ -59,22 +59,22 @@ class AbsensiController extends Controller
                 'message' => 'Device Not Found',
             ], 404);
         }
-        $qrcode = new QRCodeController($ssid, Carbon::now()->isoFormat('Y-MM-D'));
-        if (!$qrcode->verifyQR()) {
-            return response()->json([
-                'status' => 'A404-1',
-                'message' => 'Failed! '.Carbon::now()->isoFormat('Y-MM-D'),
-            ], 404);
-        }
+        // $qrcode = new QRCodeController($ssid, Carbon::now()->isoFormat('Y-MM-D'));
+        // if (!$qrcode->verifyQR()) {
+        //     return response()->json([
+        //         'status' => 'A404-1',
+        //         'message' => 'Failed! '.Carbon::now()->isoFormat('Y-MM-D'),
+        //     ], 404);
+        // }
         if ($opsi == 'masuk') {
-            $cek = strtotime($time);
-            $add = $cek+(60*5);
-            if (date('Y-m-d H:i:s') >= date('Y-m-d H:i:s', $add)) {
-                return response()->json([
-                    'status' => 'A401-5',
-                    'message' => 'QRCode expired',
-                ], 401);
-            }
+            // $cek = strtotime($time);
+            // $add = $cek+(60*5);
+            // if (date('Y-m-d H:i:s') >= date('Y-m-d H:i:s', $add)) {
+            //     return response()->json([
+            //         'status' => 'A401-5',
+            //         'message' => 'QRCode expired',
+            //     ], 401);
+            // }
             $absen = new Absensi;
             $getAbsen = $this->getKaryawanAbsensi($user_id, $imei);
             if ($getAbsen) {
@@ -84,8 +84,10 @@ class AbsensiController extends Controller
                 ], 409);
             }
             $absen->device_id = $getDevice->verifyDevice();
-            $absen->jam_masuk = Carbon::now();
-            $absen->qrcode_id = $qrcode->verifyQR();
+            // $absen->jam_masuk = Carbon::now();
+            // $absen->qrcode_id = $qrcode->verifyQR();
+            $absen->jam_masuk = '';
+            $absen->qrcode_id = 24;
             $absen->save();
             return $absen;
         } else {
@@ -104,7 +106,8 @@ class AbsensiController extends Controller
                     'message' => 'Duplicate Entry',
                 ], 409);
             }
-            $absenKeluar->jam_keluar = Carbon::now();
+            // $absenKeluar->jam_keluar = Carbon::now();
+            $absenKeluar->jam_keluar = '';
             $absenKeluar->save();
             return $absenKeluar;
         }
