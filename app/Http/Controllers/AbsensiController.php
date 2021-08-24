@@ -86,8 +86,6 @@ class AbsensiController extends Controller
             $absen->device_id = $getDevice->verifyDevice();
             $absen->jam_masuk = Carbon::now();
             $absen->qrcode_id = $qrcode->verifyQR();
-            // $absen->jam_masuk = '';
-            // $absen->qrcode_id = 24;
             $absen->save();
             return $absen;
         } else {
@@ -107,7 +105,6 @@ class AbsensiController extends Controller
                 ], 409);
             }
             $absenKeluar->jam_keluar = Carbon::now();
-            // $absenKeluar->jam_keluar = '';
             $absenKeluar->save();
             return $absenKeluar;
         }
